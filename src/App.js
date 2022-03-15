@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactFlow from 'react-flow-renderer';
 import './App.css';
+import CheckIcon from '@mui/icons-material/Check';
 
 const addbtnStyle = {
   width: 10,
@@ -24,7 +25,7 @@ const defaultElements = [
   {
     id: '1',
     type: 'default',
-    data: { label: 'JS Internship @ techSimplified' },
+    data: { label: 'JS Internship @ techSimplified', date: '1211' },
     position: { x: 0, y: 0 }
   },
   {
@@ -43,6 +44,11 @@ const defaultNode = {
   data: { label: 'JS Internship @ techSimplified' },
 }
 
+const defaultModal = {
+  what: 'aaaaaaaaaaaaaaaaaa aaa',
+  when: 'bbb'
+}
+
 function App() {
   const [elements, setElements] = useState(defaultElements);
   const [isShow, setisShow] = useState(false);
@@ -50,6 +56,7 @@ function App() {
   const [nodeHeight, setNodeHeight] = useState(null);
   const [addbtnWidth, setAddbtnWidth] = useState(null);
   const [addbtnHeight, setAddbtnHeight] = useState(null);
+  const [modalContent, setModalContent] = useState(defaultModal);
 
   const onLoad = () => {
     setNodeWidth(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[1].clientWidth);
@@ -58,8 +65,8 @@ function App() {
     setAddbtnHeight(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[0].clientHeight);
   }
 
-  const onElementClick = (event, element) => {
-    if (element.id==='start') {
+  const createNode = (postion, content) => {
+    if (postion==='start') {
       setElements((elements) => {
         let temp = [...elements];
         temp.shift();
@@ -79,7 +86,7 @@ function App() {
         ]
       })
     }
-    if (element.id==='end') {
+    if (postion==='end') {
       setElements((elements) => {
         let temp = [...elements];
         const lastElIndex = elements.length-1;
@@ -98,6 +105,18 @@ function App() {
             position: { x: elements[lastElIndex].position.x, y: elements[lastElIndex].position.y + nodeHeight + gapY},
           }
         ]
+      })
+    }
+  }
+
+  const onElementClick = (event, element) => {
+    const { id, data } = element;
+    if (id === 'start' || id === 'end') {
+      setModalContent(defaultModal);
+    } else {
+      setModalContent({
+        what: data.label,
+        when: data.date
       })
     }
   }
@@ -128,15 +147,45 @@ function App() {
   }, [nodeWidth, nodeHeight])
   
   return (
-    <div className="App" style={{ visibility: isShow }}>
-      <ReactFlow
-        elements={elements}
-        onLoad={onLoad}
-        onElementClick={onElementClick}
-        nodesDraggable={false}
+    <div className='container'>
+      <div className="flow_canvas" style={{ visibility: isShow }}>
+        <ReactFlow
+          elements={elements}
+          onLoad={onLoad}
+          onElementClick={onElementClick}
+          nodesDraggable={false}
+        />
+      <Modal
+        content={modalContent}
       />
+      </div>
     </div>
   );
+}
+
+const Modal = ({ content }) => {
+  if (content) {
+    return(
+      <div className='modal'>
+        <div className='modal_what'>
+          <div className='modal_title'>What?</div>
+          <div className='modal_content'>{content.what}</div>
+        </div>
+        <div className='modal_when'>
+          <div className='modal_title'>When?</div>
+          <div className='modal_content'>{content.when}</div>
+        </div>
+        <div className='btn_container'>
+          <div className='btn_dissmiss'>Dissmiss</div>
+          <div className='btn_save'>
+            <CheckIcon sx={{ color: '#A5A6F6' }} />
+          </div>
+        </div>
+      </div>
+    ) 
+  } else {
+    return null
+  }
 }
 
 export default App;
