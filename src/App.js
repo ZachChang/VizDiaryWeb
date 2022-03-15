@@ -25,7 +25,7 @@ const defaultElements = [
   {
     id: '1',
     type: 'default',
-    data: { label: 'JS Internship @ techSimplified', date: '1211' },
+    data: { label: 'JS Internship', date: '12/11' },
     position: { x: 0, y: 0 }
   },
   {
@@ -35,8 +35,8 @@ const defaultElements = [
     style: addbtnStyle,
     position: { x: 0, y: 0 }
   },
-  // { id: 'e-start-1', source: 'start', target: '1' },
-  // { id: 'e-1-end', source: '1', target: 'end' },
+  { id: '1', source: 'start', target: '1', isEdge: true },
+  { id: '2', source: '1', target: 'end', isEdge: true },
 ];
 
 const defaultModal = {
@@ -61,54 +61,69 @@ function App() {
     setAddbtnHeight(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[0].clientHeight);
   }
 
+  const genEdge = els => {
+    let temp = [...els];
+    let newEdges = [];
+    for (let i = 0; i < temp.length - 1; i++) {
+      const src = temp[i].id;
+      const trg = temp[i+1].id;
+      newEdges.push({
+        id: `${src}-${trg}`,
+        source: `${src}`,
+        target: `${trg}`,
+        isEdge: true
+      })      
+    }
+
+    return [
+      ...temp,
+      ...newEdges
+    ];
+  }
+
   const createNode = (content) => {
     const { what, when , nodePostiion} = content;
+    const lastNode = elements.find(el => el.id === 'end');
+    let temp = [...elements].filter(function(item) {
+      return !item.isEdge
+    })
     if (nodePostiion==='start') {
-      setElements((elements) => {
-        let temp = [...elements];
-        temp.shift();
-        temp.pop();
-        return [
-          {
-            ...elements[0],
-            position: { x: elements[0].position.x, y: elements[0].position.y - nodeHeight - gapY},
+      temp.shift();
+      let tempEls = [
+        {
+          ...elements[0],
+          position: { x: elements[0].position.x, y: elements[0].position.y - nodeHeight - gapY},
+        },
+        {
+          id: (temp.length).toString(),
+          data: {
+            label: what,
+            date: when
           },
-          {
-            id: (elements.length-1).toString(),
-            data: {
-              label: what,
-              date: when
-            },
-            position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[0].position.y - nodeHeight - gapY},
-          },
-          ...temp,
-          elements[elements.length-1]
-        ]
-      })
+          position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[0].position.y - nodeHeight - gapY},
+        },
+        ...temp
+      ];
+      setElements(genEdge(tempEls))
     }
     if (nodePostiion==='end') {
-      setElements((elements) => {
-        let temp = [...elements];
-        const lastElIndex = elements.length-1;
-        temp.shift();
-        temp.pop();
-        return [
-          elements[0],
-          ...temp,
-          {
-            data: {
-              label: what,
-              date: when
-            },
-            id: (lastElIndex).toString(),
-            position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[temp.length-1].position.y + nodeHeight + gapY},
+      temp.pop();
+      let tempEls = [
+        ...temp,
+        {
+          data: {
+            label: what,
+            date: when
           },
-          {
-            ...elements[lastElIndex],
-            position: { x: elements[lastElIndex].position.x, y: elements[lastElIndex].position.y + nodeHeight + gapY},
-          }
-        ]
-      })
+          id: (temp.length).toString(),
+          position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[temp.length-1].position.y + nodeHeight + gapY},
+        },
+        {
+          ...lastNode,
+          position: { x: lastNode.position.x, y: lastNode.position.y + nodeHeight + gapY},
+        }
+      ]
+      setElements(genEdge(tempEls))
     }
     setModalContent(null)
   }
@@ -182,7 +197,8 @@ function App() {
       setisShow(true)
     }
   }, [nodeWidth, nodeHeight])
-  
+
+  console.log(elements);
   return (
     <div className='container'>
       <div className="flow_canvas" style={{ visibility: isShow }}>
