@@ -36,10 +36,16 @@
   margin: 10px 0 30px 0;
   border-bottom: 1px solid #ebebeb;
 }
+.modal_what:hover {
+  border-bottom: 1px solid #A5A6F6;
+}
 .modal_when {
   text-align: left;
   margin: 10px 0 10px 0;
   border-bottom: 1px solid #ebebeb;
+}
+.modal_when:hover {
+  border-bottom: 1px solid #A5A6F6;
 }
 .modal_title {
   font-size: 14px;
@@ -48,13 +54,16 @@
   font-size: 18px;
   padding: 0 0 10px 20px;
   margin-top: 10px;
+  width: 100%;
+  border: none;
+  outline: none;
 }
 .btn_container {
   position: absolute;
-    bottom: -25px;
-    right: 20px;
-    display: flex;
-    align-items: center;
+  bottom: -25px;
+  right: 20px;
+  display: flex;
+  align-items: center;
 }
 .btn_dissmiss {
   cursor: pointer;

@@ -39,14 +39,10 @@ const defaultElements = [
   // { id: 'e-1-end', source: '1', target: 'end' },
 ];
 
-const defaultNode = {
-  type: 'default',
-  data: { label: 'JS Internship @ techSimplified' },
-}
-
 const defaultModal = {
-  what: 'aaaaaaaaaaaaaaaaaa aaa',
-  when: 'bbb'
+  what: '',
+  when: '',
+  nodePostiion: ''
 }
 
 function App() {
@@ -56,7 +52,7 @@ function App() {
   const [nodeHeight, setNodeHeight] = useState(null);
   const [addbtnWidth, setAddbtnWidth] = useState(null);
   const [addbtnHeight, setAddbtnHeight] = useState(null);
-  const [modalContent, setModalContent] = useState(defaultModal);
+  const [modalContent, setModalContent] = useState(null);
 
   const onLoad = () => {
     setNodeWidth(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[1].clientWidth);
@@ -65,8 +61,9 @@ function App() {
     setAddbtnHeight(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[0].clientHeight);
   }
 
-  const createNode = (postion, content) => {
-    if (postion==='start') {
+  const createNode = (content) => {
+    const { what, when , nodePostiion} = content;
+    if (nodePostiion==='start') {
       setElements((elements) => {
         let temp = [...elements];
         temp.shift();
@@ -77,8 +74,11 @@ function App() {
             position: { x: elements[0].position.x, y: elements[0].position.y - nodeHeight - gapY},
           },
           {
-            ...defaultNode,
             id: (elements.length-1).toString(),
+            data: {
+              label: what,
+              date: when
+            },
             position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[0].position.y - nodeHeight - gapY},
           },
           ...temp,
@@ -86,7 +86,7 @@ function App() {
         ]
       })
     }
-    if (postion==='end') {
+    if (nodePostiion==='end') {
       setElements((elements) => {
         let temp = [...elements];
         const lastElIndex = elements.length-1;
@@ -96,7 +96,10 @@ function App() {
           elements[0],
           ...temp,
           {
-            ...defaultNode,
+            data: {
+              label: what,
+              date: when
+            },
             id: (lastElIndex).toString(),
             position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[temp.length-1].position.y + nodeHeight + gapY},
           },
@@ -107,17 +110,51 @@ function App() {
         ]
       })
     }
+    setModalContent(null)
   }
 
   const onElementClick = (event, element) => {
     const { id, data } = element;
     if (id === 'start' || id === 'end') {
-      setModalContent(defaultModal);
+      setModalContent({
+        ...defaultModal,
+        nodePostiion: id
+      });
     } else {
       setModalContent({
         what: data.label,
-        when: data.date
+        when: data.date,
+        nodePostiion: id
       })
+    }
+  }
+
+  const editNode = newNode => {
+    const { what, when, nodePostiion } = newNode;
+    setElements((elements) => {
+      let result = elements.map(el => {
+        if (el.id === nodePostiion) {
+          return {
+            ...el,
+            data: {
+              label: what,
+              date: when
+            }
+          }
+        } else {
+          return el;
+        }
+      })
+      return result;
+    })
+    setModalContent(null)
+  }
+
+  const onClickSave = () => {
+    if (modalContent.nodePostiion === 'start' || modalContent.nodePostiion === 'end') {
+      createNode(modalContent)
+    } else {
+      editNode(modalContent);
     }
   }
 
@@ -157,27 +194,47 @@ function App() {
         />
       <Modal
         content={modalContent}
+        cancel={() => setModalContent(null)}
+        save={() => onClickSave()}
+        editWhat={e => setModalContent((curr) => {
+          return {
+            ...curr,
+            what: e.target.value
+          }
+        })}
+        editWhen={e => setModalContent((curr) => {
+          return {
+            ...curr,
+            when: e.target.value
+          }
+        })}
       />
       </div>
     </div>
   );
 }
 
-const Modal = ({ content }) => {
+const Modal = ({ content, cancel, save, editWhat, editWhen }) => {
   if (content) {
     return(
       <div className='modal'>
         <div className='modal_what'>
           <div className='modal_title'>What?</div>
-          <div className='modal_content'>{content.what}</div>
+          <input className='modal_content'
+            onChange={editWhat}
+            value={content.what}
+          />
         </div>
         <div className='modal_when'>
           <div className='modal_title'>When?</div>
-          <div className='modal_content'>{content.when}</div>
+          <input className='modal_content'
+            onChange={editWhen}
+            value={content.when}
+          />
         </div>
         <div className='btn_container'>
-          <div className='btn_dissmiss'>Dissmiss</div>
-          <div className='btn_save'>
+          <div className='btn_dissmiss' onClick={() => cancel()}>Dissmiss</div>
+          <div className='btn_save' onClick={() => save()}>
             <CheckIcon sx={{ color: '#A5A6F6' }} />
           </div>
         </div>
