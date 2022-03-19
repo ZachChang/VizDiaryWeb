@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactFlow from 'react-flow-renderer';
+import Modal from './component/Modal'
 import './App.css';
-import CheckIcon from '@mui/icons-material/Check';
 
 const addbtnStyle = {
   width: 10,
@@ -198,7 +198,6 @@ function App() {
     }
   }, [nodeWidth, nodeHeight])
 
-  console.log(elements);
   return (
     <div className='container'>
       <div className="flow_canvas" style={{ visibility: isShow }}>
@@ -218,47 +217,16 @@ function App() {
             what: e.target.value
           }
         })}
-        editWhen={e => setModalContent((curr) => {
+        editWhen={value => setModalContent((curr) => {
           return {
             ...curr,
-            when: e.target.value
+            when: value
           }
         })}
       />
       </div>
     </div>
   );
-}
-
-const Modal = ({ content, cancel, save, editWhat, editWhen }) => {
-  if (content) {
-    return(
-      <div className='modal'>
-        <div className='modal_what'>
-          <div className='modal_title'>What?</div>
-          <input className='modal_content'
-            onChange={editWhat}
-            value={content.what}
-          />
-        </div>
-        <div className='modal_when'>
-          <div className='modal_title'>When?</div>
-          <input className='modal_content'
-            onChange={editWhen}
-            value={content.when}
-          />
-        </div>
-        <div className='btn_container'>
-          <div className='btn_dissmiss' onClick={() => cancel()}>Dissmiss</div>
-          <div className='btn_save' onClick={() => save()}>
-            <CheckIcon sx={{ color: '#A5A6F6' }} />
-          </div>
-        </div>
-      </div>
-    ) 
-  } else {
-    return null
-  }
 }
 
 export default App;
