@@ -222,8 +222,6 @@ function App() {
     }
   }, [nodeWidth, nodeHeight])
 
-  console.log({modalContent});
-
   return (
     <div className='container'>
       <div className="flow_canvas" style={{ visibility: isShow }}>
