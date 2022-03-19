@@ -1,13 +1,7 @@
-import { useState, useEffect } from 'react'
 import CheckIcon from '@mui/icons-material/Check';
 import DatePicker from 'react-date-picker';
 
-const Modal = ({ content, cancel, save, editWhat, editWhen }) => {
-    const [value, onChange] = useState(new Date());
-    useEffect(() => {
-        editWhen(value)
-    }, [value])
-    
+const Modal = ({ content, cancel, save, editWhat, editWhen }) => {    
     if (content) {
       return(
         <div className='modal'>
@@ -20,7 +14,7 @@ const Modal = ({ content, cancel, save, editWhat, editWhen }) => {
           </div>
           <div className='modal_when'>
             <div className='modal_title'>When?</div>
-            <DatePicker onChange={onChange} value={value} />
+            <DatePicker onChange={editWhen} value={content.when} />
           </div>
           <div className='btn_container'>
             <div className='btn_dissmiss' onClick={() => cancel()}>Dissmiss</div>
