@@ -184,8 +184,7 @@ function App() {
         return el;
       }
     })
-    let result = reOrderNodes(removeEdge(temp));
-    setElements(genEdge(result))
+    setElements(genEdge(reOrderNodes(removeEdge(temp))))
     setModalContent(null)
   }
 
@@ -195,6 +194,15 @@ function App() {
     } else {
       editNode(modalContent);
     }
+  }
+
+  const deleteNode = () => {
+    const { nodePostiion } = modalContent;
+    let temp = [...elements].filter(function(item) {
+      return item.id !== nodePostiion
+    })
+    setElements(genEdge(reOrderNodes(removeEdge(temp))))
+    setModalContent(null)
   }
 
   useEffect(() => {
@@ -235,6 +243,7 @@ function App() {
         content={modalContent}
         cancel={() => setModalContent(null)}
         save={() => onClickSave()}
+        deleteNode={() => deleteNode()}
         editWhat={e => setModalContent((curr) => {
           return {
             ...curr,

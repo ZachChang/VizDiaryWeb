@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import CheckIcon from '@mui/icons-material/Check';
+import DeleteIcon from '@mui/icons-material/Delete';
 import DatePicker from 'react-date-picker';
 
-const Modal = ({ content, cancel, save, editWhat, editWhen }) => {
+const Modal = ({ content, cancel, save, editWhat, editWhen, deleteNode }) => {
   useEffect(() => {
     const listener = event => {
       if (event.code === "Enter" || event.code === "NumpadEnter" || event.key === 'Enter' || event.keyCode === 13) {
@@ -33,6 +34,9 @@ const Modal = ({ content, cancel, save, editWhat, editWhen }) => {
           </div>
           <div className='btn_container'>
             <div className='btn_dissmiss' onClick={() => cancel()}>Dissmiss</div>
+            {/* <div className='btn_delete' onClick={() => deleteNode()}>
+              <DeleteIcon sx={{ color: '#fb7474' }}/>
+            </div> */}
             <div className='btn_save' onClick={() => save()}>
               <CheckIcon sx={{ color: '#A5A6F6' }} />
             </div>
