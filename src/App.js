@@ -25,7 +25,7 @@ const defaultElements = [
   {
     id: '1',
     type: 'default',
-    data: { label: 'JS Internship', date: '12/11' },
+    data: { label: 'JS Internship', date: '1992/12/11' },
     position: { x: 0, y: 0 }
   },
   {
