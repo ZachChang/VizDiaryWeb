@@ -1,32 +1,32 @@
 import CheckIcon from '@mui/icons-material/Check';
 import DatePicker from 'react-date-picker';
 
-const Modal = ({ content, cancel, save, editWhat, editWhen }) => {    
-    if (content) {
-      return(
-        <div className='modal'>
-          <div className='modal_what'>
-            <div className='modal_title'>What?</div>
-            <input className='modal_content'
-              onChange={editWhat}
-              value={content.what}
-            />
-          </div>
-          <div className='modal_when'>
-            <div className='modal_title'>When?</div>
-            <DatePicker onChange={editWhen} value={content.when} />
-          </div>
-          <div className='btn_container'>
-            <div className='btn_dissmiss' onClick={() => cancel()}>Dissmiss</div>
-            <div className='btn_save' onClick={() => save()}>
-              <CheckIcon sx={{ color: '#A5A6F6' }} />
-            </div>
+const Modal = ({ content, cancel, save, editWhat, editWhen }) => {
+  if (content) {
+    return(
+      <div className='modal'>
+        <div className='modal_what'>
+          <div className='modal_title'>What?</div>
+          <input className='modal_content'
+            onChange={editWhat}
+            value={content.what}
+          />
+        </div>
+        <div className='modal_when'>
+          <div className='modal_title'>When?</div>
+          <DatePicker onChange={editWhen} value={content.when} />
+        </div>
+        <div className='btn_container'>
+          <div className='btn_dissmiss' onClick={() => cancel()}>Dissmiss</div>
+          <div className='btn_save' onClick={() => save()}>
+            <CheckIcon sx={{ color: '#A5A6F6' }} />
           </div>
         </div>
-      ) 
-    } else {
-      return null
-    }
+      </div>
+    ) 
+  } else {
+    return null
   }
+}
 
 export default Modal;

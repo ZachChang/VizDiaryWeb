@@ -11,9 +11,8 @@ const addbtnStyle = {
   justifyContent: 'center',
   alignItems: 'center'
 }
-
 const gapY = 20;
-
+const currentTime = new Date();
 const defaultElements = [
   {
     id: 'start',
@@ -25,7 +24,7 @@ const defaultElements = [
   {
     id: '1',
     type: 'default',
-    data: { label: 'JS Internship', date: '1992/12/11' },
+    data: { label: 'First event', date: currentTime },
     position: { x: 0, y: 0 }
   },
   {
@@ -60,7 +59,11 @@ function App() {
     setAddbtnWidth(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[0].clientWidth)
     setAddbtnHeight(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[0].clientHeight);
   }
-
+  const removeEdge = nodes => {
+    return [...nodes].filter(function(item) {
+      return !item.isEdge
+    })
+  }
   const genEdge = els => {
     let temp = [...els];
     let newEdges = [];
@@ -74,13 +77,33 @@ function App() {
         isEdge: true
       })      
     }
-
     return [
       ...temp,
       ...newEdges
     ];
   }
+  const reOrderNodes = nodes => {
+    let temp = [...nodes];
+    let postions = [];
+    temp.shift();
+    temp.pop();
+    temp.forEach(obj => {
+      postions.push(obj.position);
+    })
+    temp.sort((a, b) => {
+      return new Date(a.data.date).getTime() - new Date(b.data.date).getTime();
+    });
+    // combine new order and postion
+    for (let i = 0; i < temp.length; i++) {
+      temp[i].position = postions[i];
+    }
 
+    return [
+      nodes[0],
+      ...temp,
+      nodes[nodes.length-1]
+    ]
+  }
   const createNode = (content) => {
     const { what, when , nodePostiion} = content;
     const lastNode = elements.find(el => el.id === 'end');
@@ -96,6 +119,7 @@ function App() {
         },
         {
           id: (temp.length).toString(),
+          type: 'default',
           data: {
             label: what,
             date: when
@@ -104,7 +128,7 @@ function App() {
         },
         ...temp
       ];
-      setElements(genEdge(tempEls))
+      setElements(genEdge(reOrderNodes(tempEls)))
     }
     if (nodePostiion==='end') {
       temp.pop();
@@ -115,6 +139,7 @@ function App() {
             label: what,
             date: when
           },
+          type: 'default',
           id: (temp.length).toString(),
           position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[temp.length-1].position.y + nodeHeight + gapY},
         },
@@ -123,7 +148,7 @@ function App() {
           position: { x: lastNode.position.x, y: lastNode.position.y + nodeHeight + gapY},
         }
       ]
-      setElements(genEdge(tempEls))
+      setElements(genEdge(reOrderNodes(tempEls)))
     }
     setModalContent(null)
   }
@@ -146,22 +171,21 @@ function App() {
 
   const editNode = newNode => {
     const { what, when, nodePostiion } = newNode;
-    setElements((elements) => {
-      let result = elements.map(el => {
-        if (el.id === nodePostiion) {
-          return {
-            ...el,
-            data: {
-              label: what,
-              date: when
-            }
+    let temp = elements.map(el => {
+      if (el.id === nodePostiion) {
+        return {
+          ...el,
+          data: {
+            label: what,
+            date: when
           }
-        } else {
-          return el;
         }
-      })
-      return result;
+      } else {
+        return el;
+      }
     })
+    let result = reOrderNodes(removeEdge(temp));
+    setElements(genEdge(result))
     setModalContent(null)
   }
 
