@@ -28,7 +28,7 @@ const defaultElements = [
   {
     id: '1',
     type: 'default',
-    data: { label: 'First event', date: currentTime },
+    data: { label: 'My first event', date: currentTime },
     style: nodeStyle,
     position: { x: 0, y: 0 }
   },
