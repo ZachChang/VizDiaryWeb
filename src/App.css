@@ -118,3 +118,15 @@
   z-index: 1;
   opacity: .6;
 }
+/* overwrite react-flow style */
+
+.react-flow__node-default {
+  border: none;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.react-flow__handle {
+  visibility: hidden !important;
+}
+.react-flow__edge-path {
+  stroke: #A5A6F6;
+}

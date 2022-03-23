@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
 import ReactFlow from 'react-flow-renderer';
 import Modal from './component/Modal'
+import AddIcon from '@mui/icons-material/Add';
 import './App.css';
 
 const addbtnStyle = {
-  width: 10,
-  height: 10,
+  width: 20,
+  height: 20,
   borderRadius: '100%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center'
+};
+const nodeStyle = {
+  borderRadius: '20px'
 }
 const gapY = 20;
 const currentTime = new Date();
@@ -17,7 +21,7 @@ const defaultElements = [
   {
     id: 'start',
     type: 'default',
-    data: { label: ' + '},
+    data: { label: <AddIcon sx={{ color: '#A5A6F6' }} />},
     style: addbtnStyle,
     position: { x: 0, y: 0 }
   },
@@ -25,12 +29,13 @@ const defaultElements = [
     id: '1',
     type: 'default',
     data: { label: 'First event', date: currentTime },
+    style: nodeStyle,
     position: { x: 0, y: 0 }
   },
   {
     id: 'end',
     type: 'default',
-    data: { label: ' + '},
+    data: { label: <AddIcon sx={{ color: '#A5A6F6' }} />},
     style: addbtnStyle,
     position: { x: 0, y: 0 }
   },
@@ -120,6 +125,7 @@ function App() {
         {
           id: (temp.length).toString(),
           type: 'default',
+          style: nodeStyle,
           data: {
             label: what,
             date: when
@@ -139,6 +145,7 @@ function App() {
             label: what,
             date: when
           },
+          style: nodeStyle,
           type: 'default',
           id: (temp.length).toString(),
           position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[temp.length-1].position.y + nodeHeight + gapY},
