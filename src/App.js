@@ -205,10 +205,24 @@ function App() {
 
   const deleteNode = () => {
     const { nodePostiion } = modalContent;
-    let temp = [...elements].filter(function(item) {
+    let temp = [...elements]
+    const targetIndex = temp.map(el => el.id).indexOf(nodePostiion);
+
+    // Nodes before the delete node move down
+    temp.forEach((el, i) => {
+      if (i < targetIndex) {
+        temp[i].position = {
+          ...temp[i].position,
+          y: temp[i].position.y + nodeHeight + gapY
+        }
+      }
+    })
+    
+    // delete the target node
+    let newEls = temp.filter(function(item) {
       return item.id !== nodePostiion
     })
-    setElements(genEdge(reOrderNodes(removeEdge(temp))))
+    setElements(genEdge(reOrderNodes(removeEdge(newEls))))
     setModalContent(null)
   }
 
