@@ -3,7 +3,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DatePicker from 'react-date-picker';
 
-const Modal = ({ content, cancel, save, editWhat, editWhen, deleteNode }) => {
+const Modal = ({ content, cancel, save, editWhat, editWhen, editDetail, deleteNode }) => {
   const [isShowDoubleCheck, setIsShowDoubleCheck] = useState(false);
   const onClickDlete = () => {
     setIsShowDoubleCheck(false)
@@ -33,8 +33,9 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, deleteNode }) => {
             /> :
             <>
               <div className='modal_what'>
-                <div className='modal_title'>What?</div>
-                <input className='modal_content'
+                <div className='modal_title'>Label</div>
+                <input
+                  className='modal_content'
                   onChange={editWhat}
                   value={content.what}
                 />
@@ -42,6 +43,14 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, deleteNode }) => {
               <div className='modal_when'>
                 <div className='modal_title'>When?</div>
                 <DatePicker onChange={editWhen} value={content.when} />
+              </div>
+              <div className='modal_detail'>
+                <div className='modal_title'>Detail</div>
+                <textarea
+                  className='modal_content'
+                  onChange={editDetail}
+                  value={content.detail}
+                />
               </div>
               <div className='btn_container'>
                 <div className='btn_dissmiss' onClick={() => cancel()}>Dissmiss</div>

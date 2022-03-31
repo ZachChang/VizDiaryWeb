@@ -55,14 +55,24 @@
 }
 .modal_title {
   font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+.modal_detail {
+  height: 130px;
+  margin-top: 30px;
+  text-align: left;
 }
 .modal_content {
   font-size: 18px;
-  padding: 0 0 10px 20px;
-  margin-top: 10px;
+  padding: 0 0 10px 5px;
+  margin-top: 5px;
   width: 100%;
   border: none;
   outline: none;
+}
+.modal_detail > .modal_content {
+  border: 1px solid gray;
 }
 .btn_container {
   position: absolute;

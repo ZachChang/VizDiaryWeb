@@ -1,62 +1,9 @@
 import { useState, useEffect } from 'react';
 import ReactFlow from 'react-flow-renderer';
 import Modal from './component/Modal'
-import AddIcon from '@mui/icons-material/Add';
+import { defaultElements, firstElements, defaultModal, gapY} from './config';
+import { nodeStyle } from './style'
 import './App.css';
-
-const addbtnStyle = {
-  width: 20,
-  height: 20,
-  borderRadius: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center'
-};
-const nodeStyle = {
-  borderRadius: '20px'
-}
-const gapY = 20;
-const currentTime = new Date();
-const defaultElements = [
-  {
-    id: 'start',
-    type: 'default',
-    data: { label: <AddIcon sx={{ color: '#A5A6F6' }} />},
-    style: addbtnStyle,
-    position: { x: 0, y: 0 }
-  }
-]
-let firstElements = [
-  {
-    id: 'start',
-    type: 'default',
-    data: { label: <AddIcon sx={{ color: '#A5A6F6' }} />},
-    style: addbtnStyle,
-    position: { x: 0, y: 0 }
-  },
-  {
-    id: '1',
-    type: 'default',
-    data: { label: 'My first event', date: currentTime },
-    style: nodeStyle,
-    position: { x: 0, y: 0 }
-  },
-  {
-    id: 'end',
-    type: 'default',
-    data: { label: <AddIcon sx={{ color: '#A5A6F6' }} />},
-    style: addbtnStyle,
-    position: { x: 0, y: 0 }
-  },
-  { id: '1', source: 'start', target: '1', isEdge: true },
-  { id: '2', source: '1', target: 'end', isEdge: true },
-];
-
-const defaultModal = {
-  what: '',
-  when: '',
-  nodePostiion: ''
-}
 
 function App() {
   const [elements, setElements] = useState(defaultElements);
@@ -114,7 +61,7 @@ function App() {
     ]
   }
   const createNode = (content) => {
-    const { what, when , nodePostiion} = content;
+    const { what, when , detail, nodePostiion} = content;
     if (isNodeShow && isFirstNodeCreated) {
       // If the node tree is already build, add new node on it
       const lastNode = elements.find(el => el.id === 'end');
@@ -168,6 +115,7 @@ function App() {
       let newEl = [...firstElements];
       newEl[1].data.label = what;
       newEl[1].data.date = when;
+      newEl[1].data.detail = detail;
       setElements(newEl);
       setIsNodeShow(false)
       setIsFirstNodeCreated(true)
@@ -186,20 +134,22 @@ function App() {
       setModalContent({
         what: data.label,
         when: data.date,
+        detail: data.detail,
         nodePostiion: id
       })
     }
   }
 
   const editNode = newNode => {
-    const { what, when, nodePostiion } = newNode;
+    const { what, when, detail, nodePostiion } = newNode;
     let temp = elements.map(el => {
       if (el.id === nodePostiion) {
         return {
           ...el,
           data: {
             label: what,
-            date: when
+            date: when,
+            detail: detail
           }
         }
       } else {
@@ -263,7 +213,7 @@ function App() {
           setNodeWidth(nodeEl.clientWidth);
           setNodeHeight(nodeEl.clientHeight);
         }
-      }, 800);
+      }, 300);
     }
   }, [elements])
 
@@ -336,6 +286,12 @@ function App() {
           return {
             ...curr,
             when: value
+          }
+        })}
+        editDetail={e => setModalContent((curr) => {
+          return {
+            ...curr,
+            detail: e.target.value
           }
         })}
       />
