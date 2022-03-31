@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import ReactFlow from 'react-flow-renderer';
 import Modal from './component/Modal'
-import { defaultElements, firstElements, defaultModal, gapY} from './config';
+import { defaultElements, firstElements, defaultModal, gapY, storageDataKey, storageConfigKey } from './config';
 import { nodeStyle } from './style'
 import './App.css';
+import AddIcon from '@mui/icons-material/Add';
 
 function App() {
   const [elements, setElements] = useState(defaultElements);
-  const [isNodeShow, setIsNodeShow] = useState(true);
+  const [isNodeShow, setIsNodeShow] = useState(false);
   const [nodeWidth, setNodeWidth] = useState(null);
   const [nodeHeight, setNodeHeight] = useState(null);
   const [addbtnWidth, setAddbtnWidth] = useState(null);
@@ -15,11 +16,21 @@ function App() {
   const [modalContent, setModalContent] = useState(null);
   const [isFirstNodeCreated, setIsFirstNodeCreated] = useState(false);
 
+  const saveNodeInLocal = newEl => {
+    localStorage.setItem(storageDataKey,
+      JSON.stringify({
+        elements: newEl,
+        isFirstNodeCreated
+      })
+    )
+  }
+
   const removeEdge = nodes => {
     return [...nodes].filter(function(item) {
       return !item.isEdge
     })
   }
+
   const genEdge = els => {
     let temp = [...els];
     let newEdges = [];
@@ -87,7 +98,9 @@ function App() {
           },
           ...temp
         ];
-        setElements(genEdge(reOrderNodes(tempEls)))
+        const result = genEdge(reOrderNodes(tempEls))
+        setElements(result)
+        saveNodeInLocal(result)
       }
       if (nodePostiion==='end') {
         temp.pop();
@@ -108,7 +121,9 @@ function App() {
             position: { x: lastNode.position.x, y: lastNode.position.y + nodeHeight + gapY},
           }
         ]
-        setElements(genEdge(reOrderNodes(tempEls)))
+        const result = genEdge(reOrderNodes(tempEls))
+        setElements(result)
+        saveNodeInLocal(result)
       }
     } else {
       // Set the base size for the first node
@@ -119,6 +134,7 @@ function App() {
       setElements(newEl);
       setIsNodeShow(false)
       setIsFirstNodeCreated(true)
+      saveNodeInLocal(newEl)
     }
     setModalContent(null)
   }
@@ -156,7 +172,9 @@ function App() {
         return el;
       }
     })
-    setElements(genEdge(reOrderNodes(removeEdge(temp))))
+    const result = genEdge(reOrderNodes(removeEdge(temp))) 
+    setElements(result)
+    saveNodeInLocal(result)
     setModalContent(null)
   }
 
@@ -172,7 +190,6 @@ function App() {
     let isDeletingLastNode = elements.length === 5;
     if (isDeletingLastNode) {
       resetToDefault()
-      setModalContent(null)
     } else {
       const { nodePostiion } = modalContent;
       let temp = [...elements]
@@ -192,15 +209,22 @@ function App() {
       let newEls = temp.filter(function(item) {
         return item.id !== nodePostiion
       })
-      setElements(genEdge(reOrderNodes(removeEdge(newEls))))
-      setModalContent(null) 
+      const result = genEdge(reOrderNodes(removeEdge(newEls)))
+      setElements(result)
+      saveNodeInLocal(result)
     }
+    setModalContent(null) 
   }
 
   const onLoad = () => {
     const addBtn = document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[0];
     setAddbtnWidth(addBtn.clientWidth)
     setAddbtnHeight(addBtn.clientHeight);
+  }
+
+  const resetToDefault = () => {
+    setIsFirstNodeCreated(false);
+    setElements(el => [el[0]])
   }
 
   useEffect(() => {
@@ -219,7 +243,12 @@ function App() {
 
   useEffect(() => {
     // resize add btn
-    if (addbtnWidth && addbtnHeight) {
+    if (addbtnWidth && addbtnHeight && elements.length === 1) {
+      localStorage.setItem(storageConfigKey,
+        JSON.stringify({
+          addbtnWidth,
+          addbtnHeight
+        }))
       setElements(el => {
         return [{
           ...el[0],
@@ -234,7 +263,17 @@ function App() {
   
   useEffect(() => {
     // resize node
-    if (nodeWidth && nodeHeight) {
+    if (nodeWidth && nodeHeight && elements.length < 6) {
+
+      localStorage.setItem(storageConfigKey,
+        JSON.stringify({
+          addbtnWidth,
+          addbtnHeight,
+          nodeWidth,
+          nodeHeight
+        })
+      )
+
       const startY = window.innerHeight/2 - nodeHeight/2;
       const resetDefaultX = [
         window.innerWidth/2 - addbtnWidth/2,
@@ -246,21 +285,46 @@ function App() {
         startY,
         startY + nodeHeight + gapY
       ]
-      const newElements = firstElements.map((el, i) => {
+      const newElements = elements.map((el, i) => {
         return {
           ...el,
           position: { x: resetDefaultX[i], y: resetDefaultY[i]}
         }
       })
       setElements(newElements);
-      setIsNodeShow(true)
+      setIsNodeShow(true);
+      
     }
   }, [nodeWidth, nodeHeight, isNodeShow])
 
-  const resetToDefault = () => {
-    setIsFirstNodeCreated(false);
-    setElements(el => [el[0]])
-  }
+  useEffect(() => {
+    // check if there is local storage data
+    const data = JSON.parse(localStorage.getItem(storageDataKey));
+    const config = JSON.parse(localStorage.getItem(storageConfigKey));
+    // console.log(data);
+    if (data && config) {
+      const { elements, isFirstNodeCreated } = data
+      const { nodeWidth, nodeHeight, addbtnWidth, addbtnHeight } = config;
+      setElements(elements.map(el => {
+        if (el.id ==='start' || el.id === 'end') {
+          return {
+            ...el,
+            data: { label: <AddIcon sx={{ color: '#A5A6F6' }} /> }
+          }
+        } else {
+          return el
+        }
+      }));
+      setNodeWidth(nodeWidth)
+      setNodeHeight(nodeHeight)
+      setAddbtnWidth(addbtnWidth)
+      setAddbtnHeight(addbtnHeight)
+      setIsFirstNodeCreated(isFirstNodeCreated)
+    }
+    setIsNodeShow(true)
+  }, [])
+
+  console.log(elements);
 
   return (
     <div className='container'>

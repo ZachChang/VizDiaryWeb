@@ -48,9 +48,14 @@ const defaultModal = {
 
 const gapY = 20;
 
+const storageDataKey = 'viz-diary-data';
+const storageConfigKey = 'viz-diary-config';
+
 export {
     defaultElements,
     firstElements,
     defaultModal,
-    gapY
+    gapY,
+    storageDataKey,
+    storageConfigKey
 }

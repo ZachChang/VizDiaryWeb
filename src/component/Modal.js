@@ -9,6 +9,10 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, editDetail, deleteNo
     setIsShowDoubleCheck(false)
     deleteNode()
   }
+  const onClickBg = () => {
+    setIsShowDoubleCheck(false)
+    cancel()
+  }
   useEffect(() => {
     const listener = event => {
       if (event.code === "Enter" || event.code === "NumpadEnter" || event.key === 'Enter' || event.keyCode === 13) {
@@ -66,7 +70,7 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, editDetail, deleteNo
             </>
           }
         </div>
-        <div className='modal_background' onClick={() => cancel()}></div>
+        <div className='modal_background' onClick={() => onClickBg()}></div>
       </>
     ) 
   } else {
