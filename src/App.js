@@ -298,10 +298,11 @@ function App() {
   }, [nodeWidth, nodeHeight, isNodeShow])
 
   useEffect(() => {
+    //TODO: save for differ size device
     // check if there is local storage data
     const data = JSON.parse(localStorage.getItem(storageDataKey));
     const config = JSON.parse(localStorage.getItem(storageConfigKey));
-    // console.log(data);
+
     if (data && config) {
       const { elements, isFirstNodeCreated } = data
       const { nodeWidth, nodeHeight, addbtnWidth, addbtnHeight } = config;
@@ -323,8 +324,6 @@ function App() {
     }
     setIsNodeShow(true)
   }, [])
-
-  console.log(elements);
 
   return (
     <div className='container'>
