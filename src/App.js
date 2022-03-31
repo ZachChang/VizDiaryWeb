@@ -24,6 +24,15 @@ const defaultElements = [
     data: { label: <AddIcon sx={{ color: '#A5A6F6' }} />},
     style: addbtnStyle,
     position: { x: 0, y: 0 }
+  }
+]
+let firstElements = [
+  {
+    id: 'start',
+    type: 'default',
+    data: { label: <AddIcon sx={{ color: '#A5A6F6' }} />},
+    style: addbtnStyle,
+    position: { x: 0, y: 0 }
   },
   {
     id: '1',
@@ -51,19 +60,14 @@ const defaultModal = {
 
 function App() {
   const [elements, setElements] = useState(defaultElements);
-  const [isShow, setisShow] = useState(false);
+  const [isNodeShow, setIsNodeShow] = useState(true);
   const [nodeWidth, setNodeWidth] = useState(null);
   const [nodeHeight, setNodeHeight] = useState(null);
   const [addbtnWidth, setAddbtnWidth] = useState(null);
   const [addbtnHeight, setAddbtnHeight] = useState(null);
   const [modalContent, setModalContent] = useState(null);
+  const [isFirstNodeCreated, setIsFirstNodeCreated] = useState(false);
 
-  const onLoad = () => {
-    setNodeWidth(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[1].clientWidth);
-    setNodeHeight(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[1].clientHeight);
-    setAddbtnWidth(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[0].clientWidth)
-    setAddbtnHeight(document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[0].clientHeight);
-  }
   const removeEdge = nodes => {
     return [...nodes].filter(function(item) {
       return !item.isEdge
@@ -111,51 +115,62 @@ function App() {
   }
   const createNode = (content) => {
     const { what, when , nodePostiion} = content;
-    const lastNode = elements.find(el => el.id === 'end');
-    let temp = [...elements].filter(function(item) {
-      return !item.isEdge
-    })
-    if (nodePostiion==='start') {
-      temp.shift();
-      let tempEls = [
-        {
-          ...elements[0],
-          position: { x: elements[0].position.x, y: elements[0].position.y - nodeHeight - gapY},
-        },
-        {
-          id: (temp.length).toString(),
-          type: 'default',
-          style: nodeStyle,
-          data: {
-            label: what,
-            date: when
+    if (isNodeShow && isFirstNodeCreated) {
+      // If the node tree is already build, add new node on it
+      const lastNode = elements.find(el => el.id === 'end');
+      let temp = [...elements].filter(function(item) {
+        return !item.isEdge
+      })
+      if (nodePostiion==='start') {
+        temp.shift();
+        let tempEls = [
+          {
+            ...elements[0],
+            position: { x: elements[0].position.x, y: elements[0].position.y - nodeHeight - gapY},
           },
-          position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[0].position.y - nodeHeight - gapY},
-        },
-        ...temp
-      ];
-      setElements(genEdge(reOrderNodes(tempEls)))
-    }
-    if (nodePostiion==='end') {
-      temp.pop();
-      let tempEls = [
-        ...temp,
-        {
-          data: {
-            label: what,
-            date: when
+          {
+            id: (temp.length).toString(),
+            type: 'default',
+            style: nodeStyle,
+            data: {
+              label: what,
+              date: when
+            },
+            position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[0].position.y - nodeHeight - gapY},
           },
-          style: nodeStyle,
-          type: 'default',
-          id: (temp.length).toString(),
-          position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[temp.length-1].position.y + nodeHeight + gapY},
-        },
-        {
-          ...lastNode,
-          position: { x: lastNode.position.x, y: lastNode.position.y + nodeHeight + gapY},
-        }
-      ]
-      setElements(genEdge(reOrderNodes(tempEls)))
+          ...temp
+        ];
+        setElements(genEdge(reOrderNodes(tempEls)))
+      }
+      if (nodePostiion==='end') {
+        temp.pop();
+        let tempEls = [
+          ...temp,
+          {
+            data: {
+              label: what,
+              date: when
+            },
+            style: nodeStyle,
+            type: 'default',
+            id: (temp.length).toString(),
+            position: { x: window.innerWidth/2 - nodeWidth/2, y: temp[temp.length-1].position.y + nodeHeight + gapY},
+          },
+          {
+            ...lastNode,
+            position: { x: lastNode.position.x, y: lastNode.position.y + nodeHeight + gapY},
+          }
+        ]
+        setElements(genEdge(reOrderNodes(tempEls)))
+      }
+    } else {
+      // Set the base size for the first node
+      let newEl = [...firstElements];
+      newEl[1].data.label = what;
+      newEl[1].data.date = when;
+      setElements(newEl);
+      setIsNodeShow(false)
+      setIsFirstNodeCreated(true)
     }
     setModalContent(null)
   }
@@ -204,29 +219,71 @@ function App() {
   }
 
   const deleteNode = () => {
-    const { nodePostiion } = modalContent;
-    let temp = [...elements]
-    const targetIndex = temp.map(el => el.id).indexOf(nodePostiion);
-
-    // Nodes before the delete node move down
-    temp.forEach((el, i) => {
-      if (i < targetIndex) {
-        temp[i].position = {
-          ...temp[i].position,
-          y: temp[i].position.y + nodeHeight + gapY
+    let isDeletingLastNode = elements.length === 5;
+    if (isDeletingLastNode) {
+      resetToDefault()
+      setModalContent(null)
+    } else {
+      const { nodePostiion } = modalContent;
+      let temp = [...elements]
+      const targetIndex = temp.map(el => el.id).indexOf(nodePostiion);
+  
+      // Nodes before the delete node move down
+      temp.forEach((el, i) => {
+        if (i < targetIndex) {
+          temp[i].position = {
+            ...temp[i].position,
+            y: temp[i].position.y + nodeHeight + gapY
+          }
         }
-      }
-    })
-    
-    // delete the target node
-    let newEls = temp.filter(function(item) {
-      return item.id !== nodePostiion
-    })
-    setElements(genEdge(reOrderNodes(removeEdge(newEls))))
-    setModalContent(null)
+      })
+      
+      // delete the target node
+      let newEls = temp.filter(function(item) {
+        return item.id !== nodePostiion
+      })
+      setElements(genEdge(reOrderNodes(removeEdge(newEls))))
+      setModalContent(null) 
+    }
+  }
+
+  const onLoad = () => {
+    const addBtn = document.getElementsByClassName('react-flow__node react-flow__node-default selectable')[0];
+    setAddbtnWidth(addBtn.clientWidth)
+    setAddbtnHeight(addBtn.clientHeight);
   }
 
   useEffect(() => {
+    // When first node creating, we should get the size, and set chart to visible
+    if (!isNodeShow) {
+      // TODO: find a better way to access the new node on DOM tree
+      setTimeout(() => {
+        const nodeEl = document.getElementsByClassName('react-flow__node react-flow__node-default')[1];
+        if (nodeEl) {
+          setNodeWidth(nodeEl.clientWidth);
+          setNodeHeight(nodeEl.clientHeight);
+        }
+      }, 800);
+    }
+  }, [elements])
+
+  useEffect(() => {
+    // resize add btn
+    if (addbtnWidth && addbtnHeight) {
+      setElements(el => {
+        return [{
+          ...el[0],
+          position: {
+            x: window.innerWidth/2 - addbtnWidth/2,
+            y: window.innerHeight/2 - addbtnHeight
+          }
+        }]
+      })
+    }
+  }, [addbtnWidth, addbtnHeight])
+  
+  useEffect(() => {
+    // resize node
     if (nodeWidth && nodeHeight) {
       const startY = window.innerHeight/2 - nodeHeight/2;
       const resetDefaultX = [
@@ -239,24 +296,28 @@ function App() {
         startY,
         startY + nodeHeight + gapY
       ]
-      const newElements = defaultElements.map((el, i) => {
+      const newElements = firstElements.map((el, i) => {
         return {
           ...el,
           position: { x: resetDefaultX[i], y: resetDefaultY[i]}
         }
       })
-
       setElements(newElements);
-      setisShow(true)
+      setIsNodeShow(true)
     }
-  }, [nodeWidth, nodeHeight])
+  }, [nodeWidth, nodeHeight, isNodeShow])
+
+  const resetToDefault = () => {
+    setIsFirstNodeCreated(false);
+    setElements(el => [el[0]])
+  }
 
   return (
     <div className='container'>
-      <div className="flow_canvas" style={{ visibility: isShow }}>
+      <div className={`flow_canvas ${isNodeShow ? 'visible': 'invisible'}`}>
         <ReactFlow
-          elements={elements}
           onLoad={onLoad}
+          elements={elements}
           onElementClick={onElementClick}
           nodesDraggable={false}
         />

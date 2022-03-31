@@ -3,6 +3,12 @@
   height: 100vh;
   width: 100%;
 }
+.visible {
+  visibility: visible !important;
+}
+.invisible {
+  visibility: hidden !important;
+}
 .flow_canvas {
   text-align: center;
   height: 100%;
