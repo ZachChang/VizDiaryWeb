@@ -163,3 +163,10 @@
 .react-flow__edge-path {
   stroke: #A5A6F6;
 }
+
+@media only screen and (min-width: 1300px) {
+  .btn_container {
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
