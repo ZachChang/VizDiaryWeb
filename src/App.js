@@ -5,6 +5,7 @@ import { defaultElements, firstElements, defaultModal, gapY, storageDataKey, sto
 import { nodeStyle } from './style'
 import './App.css';
 import AddIcon from '@mui/icons-material/Add';
+import Header from './component/Header';
 
 function App() {
   const [elements, setElements] = useState(defaultElements);
@@ -331,6 +332,7 @@ function App() {
 
   return (
     <div className='container'>
+      <Header />
       <div className={`flow_canvas ${isNodeShow ? 'visible': 'invisible'}`}>
         <ReactFlow
           onLoad={onLoad}

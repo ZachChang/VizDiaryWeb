@@ -168,7 +168,23 @@
 .react-flow__edge-path {
   stroke: #A5A6F6;
 }
-
+.header_container {
+  position: absolute;
+  height: 50px;
+  background-color: #e1e1e1;
+  width: 100vw;
+  text-align: center;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+.header_container a {
+  color: #4a4a4a;
+  text-decoration: unset;
+  font-size: 18px;
+}
 @media only screen and (min-width: 1300px) {
   .btn_container {
     right: 50%;
