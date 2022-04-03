@@ -19,8 +19,7 @@ function App() {
   const saveNodeInLocal = newEl => {
     localStorage.setItem(storageDataKey,
       JSON.stringify({
-        elements: newEl,
-        isFirstNodeCreated
+        elements: newEl
       })
     )
   }
@@ -223,8 +222,10 @@ function App() {
   }
 
   const resetToDefault = () => {
+    const startNodeWithPosition = [elements[0]];
     setIsFirstNodeCreated(false);
-    setElements(el => [el[0]])
+    setElements(startNodeWithPosition)
+    saveNodeInLocal(startNodeWithPosition)
   }
 
   useEffect(() => {
@@ -304,8 +305,9 @@ function App() {
     const config = JSON.parse(localStorage.getItem(storageConfigKey));
 
     if (data && config) {
-      const { elements, isFirstNodeCreated } = data
+      const { elements } = data
       const { nodeWidth, nodeHeight, addbtnWidth, addbtnHeight } = config;
+      let isFirstCreated = elements.length >= 5;
       setElements(elements.map(el => {
         if (el.id ==='start' || el.id === 'end') {
           return {
@@ -320,10 +322,12 @@ function App() {
       setNodeHeight(nodeHeight)
       setAddbtnWidth(addbtnWidth)
       setAddbtnHeight(addbtnHeight)
-      setIsFirstNodeCreated(isFirstNodeCreated)
+      setIsFirstNodeCreated(isFirstCreated)
     }
     setIsNodeShow(true)
   }, [])
+
+  console.log(elements);
 
   return (
     <div className='container'>
