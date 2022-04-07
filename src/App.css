@@ -63,7 +63,7 @@
   font-weight: bold;
   margin-bottom: 3px;
 }
-.modal_detail {
+.modal_details {
   height: 130px;
   margin-top: 30px;
   text-align: left;
@@ -76,7 +76,7 @@
   border: none;
   outline: none;
 }
-.modal_detail > .modal_content {
+.modal_details > .modal_content {
   border: 1px solid gray;
 }
 .btn_container {

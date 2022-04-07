@@ -24,7 +24,7 @@ const firstElements = [
   {
     id: '1',
     type: 'default',
-    data: { label: 'My first event', date: currentTime, detail: '' },
+    data: { label: 'My first event', date: currentTime, details: '' },
     style: nodeStyle,
     position: { x: 0, y: 0 }
   },
@@ -42,7 +42,7 @@ const firstElements = [
 const defaultModal = {
     what: '',
     when: '',
-    detail: '',
+    details: '',
     nodePosition: ''
 }
 

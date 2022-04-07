@@ -72,7 +72,16 @@ function App() {
     ]
   }
   const createNode = (content) => {
-    const { what, when , detail, nodePosition} = content;
+    let { what, when , details, nodePosition} = content;
+    // set when variable value to today if it is empty and show it in modal
+
+    when = new Date();
+      setModalContent({
+        what: '',
+        when: when,
+        details: '',
+        nodePosition: nodePosition
+      })
     if (isNodeShow && isFirstNodeCreated) {
       // If the node tree is already build, add new node on it
       const lastNode = elements.find(el => el.id === 'end');
@@ -130,7 +139,7 @@ function App() {
       let newEl = [...firstElements];
       newEl[1].data.label = what;
       newEl[1].data.date = when;
-      newEl[1].data.detail = detail;
+      newEl[1].data.details = details;
       setElements(newEl);
       setIsNodeShow(false)
       setIsFirstNodeCreated(true)
@@ -150,14 +159,14 @@ function App() {
       setModalContent({
         what: data.label,
         when: data.date,
-        detail: data.detail,
+        details: data.details,
         nodePosition: id
       })
     }
   }
 
   const editNode = newNode => {
-    const { what, when, detail, nodePosition } = newNode;
+    const { what, when, details, nodePosition } = newNode;
     let temp = elements.map(el => {
       if (el.id === nodePosition) {
         return {
@@ -165,7 +174,7 @@ function App() {
           data: {
             label: what,
             date: when,
-            detail: detail
+            details: details
           }
         }
       } else {
@@ -357,10 +366,10 @@ function App() {
             when: value
           }
         })}
-        editDetail={e => setModalContent((curr) => {
+        editDetails={e => setModalContent((curr) => {
           return {
             ...curr,
-            detail: e.target.value
+            details: e.target.value
           }
         })}
       />
