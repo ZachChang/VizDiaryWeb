@@ -72,14 +72,14 @@ function App() {
     ]
   }
   const createNode = (content) => {
-    const { what, when , detail, nodePostiion} = content;
+    const { what, when , detail, nodePosition} = content;
     if (isNodeShow && isFirstNodeCreated) {
       // If the node tree is already build, add new node on it
       const lastNode = elements.find(el => el.id === 'end');
       let temp = [...elements].filter(function(item) {
         return !item.isEdge
       })
-      if (nodePostiion==='start') {
+      if (nodePosition==='start') {
         temp.shift();
         let tempEls = [
           {
@@ -102,7 +102,7 @@ function App() {
         setElements(result)
         saveNodeInLocal(result)
       }
-      if (nodePostiion==='end') {
+      if (nodePosition==='end') {
         temp.pop();
         let tempEls = [
           ...temp,
@@ -144,22 +144,22 @@ function App() {
     if (id === 'start' || id === 'end') {
       setModalContent({
         ...defaultModal,
-        nodePostiion: id
+        nodePosition: id
       });
     } else {
       setModalContent({
         what: data.label,
         when: data.date,
         detail: data.detail,
-        nodePostiion: id
+        nodePosition: id
       })
     }
   }
 
   const editNode = newNode => {
-    const { what, when, detail, nodePostiion } = newNode;
+    const { what, when, detail, nodePosition } = newNode;
     let temp = elements.map(el => {
-      if (el.id === nodePostiion) {
+      if (el.id === nodePosition) {
         return {
           ...el,
           data: {
@@ -179,7 +179,7 @@ function App() {
   }
 
   const onClickSave = () => {
-    if (modalContent.nodePostiion === 'start' || modalContent.nodePostiion === 'end') {
+    if (modalContent.nodePosition === 'start' || modalContent.nodePosition === 'end') {
       createNode(modalContent)
     } else {
       editNode(modalContent);
@@ -191,9 +191,9 @@ function App() {
     if (isDeletingLastNode) {
       resetToDefault()
     } else {
-      const { nodePostiion } = modalContent;
+      const { nodePosition } = modalContent;
       let temp = [...elements]
-      const targetIndex = temp.map(el => el.id).indexOf(nodePostiion);
+      const targetIndex = temp.map(el => el.id).indexOf(nodePosition);
   
       // Nodes before the delete node move down
       temp.forEach((el, i) => {
@@ -207,7 +207,7 @@ function App() {
       
       // delete the target node
       let newEls = temp.filter(function(item) {
-        return item.id !== nodePostiion
+        return item.id !== nodePosition
       })
       const result = genEdge(reOrderNodes(removeEdge(newEls)))
       setElements(result)

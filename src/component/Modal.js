@@ -58,7 +58,7 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, editDetail, deleteNo
               </div>
               <div className='btn_container'>
                 <div className='btn_dissmiss' onClick={() => cancel()}>Dissmiss</div>
-                {content.nodePostiion !== 'start' && content.nodePostiion !== 'end' &&
+                {content.nodePosition !== 'start' && content.nodePosition !== 'end' &&
                   <div className='btn_delete' onClick={() => setIsShowDoubleCheck(true)}>
                     <DeleteIcon sx={{ color: '#fb7474' }}/>
                   </div>

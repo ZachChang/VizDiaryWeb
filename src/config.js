@@ -43,7 +43,7 @@ const defaultModal = {
     what: '',
     when: '',
     detail: '',
-    nodePostiion: ''
+    nodePosition: ''
 }
 
 const gapY = 20;
