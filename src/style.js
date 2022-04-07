@@ -4,7 +4,8 @@ const addbtnStyle = {
     borderRadius: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    outline: 'none',
 };
 
 const nodeStyle = { borderRadius: '20px' };

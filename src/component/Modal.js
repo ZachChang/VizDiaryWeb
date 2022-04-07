@@ -57,7 +57,7 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, editDetail, deleteNo
                 />
               </div>
               <div className='btn_container'>
-                <div className='btn_dissmiss' onClick={() => cancel()}>Dissmiss</div>
+                <div className='btn_dismiss' onClick={() => cancel()}>dismiss</div>
                 {content.nodePosition !== 'start' && content.nodePosition !== 'end' &&
                   <div className='btn_delete' onClick={() => setIsShowDoubleCheck(true)}>
                     <DeleteIcon sx={{ color: '#fb7474' }}/>
@@ -83,7 +83,7 @@ const DoubleCheck = ({ deleteNode, cancel }) => {
     <div className='small_modal'>
       <h2>Are you sure to delete this item?</h2>
       <div className='btn_container'>
-      <div className='btn_dissmiss' onClick={() => cancel()}>Cancel</div>
+      <div className='btn_dismiss' onClick={() => cancel()}>Cancel</div>
         <div className='btn_delete_text' onClick={() => deleteNode()}>Delete</div>
       </div>
     </div>
