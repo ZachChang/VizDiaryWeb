@@ -4,13 +4,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DatePicker from 'react-date-picker';
 
 const Modal = ({ content, cancel, save, editWhat, editWhen, editDetails, deleteNode }) => {
-  const [isShowDoubleCheck, setIsShowDoubleCheck] = useState(false);
+  const [isShowConfirmationModal, setIsShowConfirmationModal] = useState(false);
   const onClickDlete = () => {
-    setIsShowDoubleCheck(false)
+    setIsShowConfirmationModal(false)
     deleteNode()
   }
   const onClickBg = () => {
-    setIsShowDoubleCheck(false)
+    setIsShowConfirmationModal(false)
     cancel()
   }
   useEffect(() => {
@@ -30,10 +30,10 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, editDetails, deleteN
     return(
       <>
         <div className='modal'>
-          {isShowDoubleCheck ? 
-            <DoubleCheck
+          {isShowConfirmationModal ? 
+            <ConfirmationModal
               deleteNode={onClickDlete}
-              cancel={() => setIsShowDoubleCheck(false)}
+              cancel={() => setIsShowConfirmationModal(false)}
             /> :
             <>
               <div className='modal_what'>
@@ -63,7 +63,8 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, editDetails, deleteN
               <div className='btn_container'>
                 <div className='btn_dismiss' onClick={() => cancel()}>dismiss</div>
                 {content.nodePosition !== 'start' && content.nodePosition !== 'end' &&
-                  <div className='btn_delete' onClick={() => setIsShowDoubleCheck(true)}>
+                  // <div className='btn_delete' onClick={() => setIsShowConfirmationModal(true)}> {* with delete confirmation *}
+                  <div className='btn_delete' onClick={() => deleteNode(this)}>
                     <DeleteIcon sx={{ color: '#fb7474' }}/>
                   </div>
                 }
@@ -82,13 +83,13 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, editDetails, deleteN
   }
 }
 
-const DoubleCheck = ({ deleteNode, cancel }) => {
+const ConfirmationModal = ({ deleteNode, cancel }) => {
   return(
     <div className='small_modal'>
-      <h2>Are you sure to delete this item?</h2>
+      <h2>Sure you want to remove this?</h2>
       <div className='btn_container'>
-      <div className='btn_dismiss' onClick={() => cancel()}>Cancel</div>
-        <div className='btn_delete_text' onClick={() => deleteNode()}>Delete</div>
+      <div className='btn_dismiss' onClick={() => cancel()}>Well, if you phrase it like that...</div>
+        <div className='btn_delete_text' onClick={() => deleteNode()}>Yeah, remove it.</div>
       </div>
     </div>
   )
