@@ -42,6 +42,7 @@ const Modal = ({ content, cancel, save, editWhat, editWhen, editDetails, deleteN
                   className='modal_content'
                   onChange={editWhat}
                   value={content.what}
+                  placeholder={randomWhatPlaceholder()}
                 />
               </div>
               <div className='modal_when'>
@@ -91,6 +92,20 @@ const DoubleCheck = ({ deleteNode, cancel }) => {
       </div>
     </div>
   )
+}
+
+const randomWhatPlaceholder = () => {
+  const whatPlaceholder = [
+    'Found out a new thing',
+    'Started a new project',
+    'Finished a project',
+    'Learned something new',
+    'Tried something new for the first time',
+    'Moved to a new place',
+    'Got a new job',
+    'Started a new hobby',
+  ]
+  return whatPlaceholder[Math.floor(Math.random() * whatPlaceholder.length)]
 }
 
 export default Modal;
