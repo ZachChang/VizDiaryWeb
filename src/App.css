@@ -164,7 +164,7 @@
 
 .react-flow__node-default {
   border: none !important;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
 }
 .react-flow__handle {
   visibility: hidden !important;
