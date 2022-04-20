@@ -337,7 +337,6 @@ function App() {
     setIsNodeShow(true)
   }, [])
 
-  console.log(elements);
 
   return (
     <div className='container'>
