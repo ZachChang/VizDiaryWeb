@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/viz-diary-web/static/css/main.786d86ff.css",
+    "main.css": "/viz-diary-web/static/css/main.984a3bdf.css",
     "main.js": "/viz-diary-web/static/js/main.b02367db.js",
     "static/js/787.2980c8c7.chunk.js": "/viz-diary-web/static/js/787.2980c8c7.chunk.js",
     "index.html": "/viz-diary-web/index.html",
-    "main.786d86ff.css.map": "/viz-diary-web/static/css/main.786d86ff.css.map",
+    "main.984a3bdf.css.map": "/viz-diary-web/static/css/main.984a3bdf.css.map",
     "main.b02367db.js.map": "/viz-diary-web/static/js/main.b02367db.js.map",
     "787.2980c8c7.chunk.js.map": "/viz-diary-web/static/js/787.2980c8c7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.786d86ff.css",
+    "static/css/main.984a3bdf.css",
     "static/js/main.b02367db.js"
   ]
 }
